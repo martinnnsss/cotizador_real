@@ -1,0 +1,60 @@
+.container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .toolbar {
+    flex: 0 0 16%;
+    background-color: #eeeeee;
+    border-right: 1px solid rgb(171, 171, 171);
+  }
+  .toolbar-h1{
+    margin-top: 1.2rem;
+    font-size: 1.7rem;
+  }
+  .toolbar-li{
+    margin-top: 1rem;
+    margin-left: 1rem;
+    
+  }
+
+  .toolbar ul {
+    list-style-type: none; 
+    cursor: pointer;
+  }
+
+
+
+
+    .toolbar-li span {
+        position: relative;
+    }
+
+    .toolbar-li span:nth-child(2) {
+        top: -5px;
+        left: 7px;
+    }
+
+  .tool-container {
+    flex: 1;
+    background-color: rgb(255, 255, 255);
+  }
+  
+  .title-tool-container{
+    font-size: 1.56rem;
+    margin-bottom: 1rem;
+  }
+
+  .template-downloader{
+    font-size: 0.9rem;
+  
+    margin-bottom: 1rem;
+  }
+  .madewithlove{
+    position: fixed;
+    text-align: center;
+    bottom: 10px;
+    left:7px;
+    font-style: italic;
+    font-size: 0.8rem;
+  }
