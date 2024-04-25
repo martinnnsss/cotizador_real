@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
+import * as XLSX from 'xlsx'
 
 import styled from 'styled-components';
+import PrimaryButton from '../Components/PrimaryButton'
 
 const UploadContainer = styled.div`
   width: 100%;
@@ -51,6 +53,7 @@ const Icon = styled.span`
 
 function ToolContainer({ type }){
     const [driveLink, setDriveLink] = useState('');
+    const [file, setFile] = useState(null);
 
     const handleTemplateClick = () => {
         // Aquí puedes agregar más casos dependiendo de los type
@@ -61,8 +64,6 @@ function ToolContainer({ type }){
         }
     };
 
-
-
     let title = 'Upload your files here';
     if (type === "cotizador") {
         title = "💰Cotizador💰";
@@ -71,11 +72,75 @@ function ToolContainer({ type }){
     }
 
 
+
+
+
+    
     const handleFileUpload = (event) => {
-        const file = event.target.files[0]; // Obtiene el primer archivo seleccionado
-        // Aquí puedes realizar el procesamiento del archivo, por ejemplo, enviarlo a un servidor o procesarlo localmente
-        console.log('Archivo seleccionado:', file);
+        setFile(event.target.files[0]);
     };
+
+    const handleSubmit = async () => {
+        if (!file) {
+            alert('Please select a file');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/upload', {
+            method: 'POST',
+            body: formData
+            });
+            
+            if (!response.ok) {
+            throw new Error('Failed to upload file');
+            }
+
+            // Process response if needed
+            const jsonData = await response.json();
+
+            const jsonArray = JSON.parse(jsonData);
+            // Convert JSON data to XLSX
+            console.log(jsonArray)
+
+
+            const worksheet = XLSX.utils.json_to_sheet(jsonArray);
+        
+            // Create workbook
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        
+            // Convert workbook to binary XLSX
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        
+            // Create a Blob from the XLSX data
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        
+            // Create a temporary URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+        
+            // Create a link element to initiate the download
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'data.xlsx');
+            document.body.appendChild(link);
+        
+            // Initiate the download
+            link.click();
+        
+            // Clean up by removing the temporary URL and link element
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to upload file');
+        }
+        };
+
 
     return (
         <UploadContainer>
@@ -96,6 +161,10 @@ function ToolContainer({ type }){
                     onChange={handleFileUpload}
                 />
             </UploadArea>
+            <div onClick={handleSubmit} >
+                < PrimaryButton text="Upload File"/>
+            </div>
+            
         </UploadBox>
         </UploadContainer>
     );
