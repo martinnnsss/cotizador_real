@@ -90,6 +90,10 @@ function ToolContainer({ type }){
         formData.append('file', file);
 
         try {
+            
+            // agregar endpoint ruteo!!!
+
+
             const response = await fetch('http://127.0.0.1:5000/cotizar', {
             method: 'POST',
             body: formData
