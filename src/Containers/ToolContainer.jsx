@@ -93,12 +93,12 @@ function ToolContainer({ type }){
             
             // agregar endpoint ruteo!!!
 
-
-            const response = await fetch('http://127.0.0.1:5000/cotizar', {
+            console.log(formData)
+            const response = await fetch('https://copscl.pythonanywhere.com/cotizar', {
             method: 'POST',
             body: formData
             });
-            
+            console.log(response)
             if (!response.ok) {
             throw new Error('Failed to upload file');
             }

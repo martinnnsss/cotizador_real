@@ -14,26 +14,28 @@ function Home() {
 
 
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // Log to check if function is bein
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/login', {
+
+  
+      const response = await axios.post('https://copscl.pythonanywhere.com/login', {
         email: email,
         password: password 
       });
-
-      
+  
+  
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
-
-
-        console.log(response.data.token)
+  
         window.location.href = '/tools';
+        
       } else {
-        alert("Credenciales incorrectas")
+        alert("Credenciales incorrectas");
       }
     } catch (error) {
-      alert("Credenciales incorrectas");
 
     }
   }
@@ -65,7 +67,8 @@ function Home() {
             required
           />
         </div>
-        <button type="submit" className="login-button" onClick={handleLogin} >Login</button>
+        <button className="login-button" onClick={(e) => handleLogin(e)}>Login</button>
+
       </form>
     </div>
 

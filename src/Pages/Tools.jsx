@@ -19,15 +19,21 @@ const Tools = () => {
       // Check if user is authorized
       const checkAuthorization = async () => {
         const token = localStorage.getItem('token');
-
+        console.log(token)
         if (token) {
+          console.log(token)
           try {
-            // Include the token in the Authorization header
-            const response = await axios.get('http://127.0.0.1:5000/check-auth', {
+            /* Include the token in the Authorization header
+            const response = await axios.post('https://copscl.pythonanywhere.com/check-auth', {
               headers: {
                 Authorization: token
               }
             });
+            */
+            const response = await axios.post('https://copscl.pythonanywhere.com/check-auth', {
+              Authorization: token
+            });
+            console.log(response)
             if (response.status === 200) {
               setAuthorized(true);
               
@@ -62,6 +68,7 @@ const Tools = () => {
                 Cotizador
               </span>
             </li>
+            {/*
             <li className='toolbar-li' onClick={() => handleToolClick("ruteador")}>
               <span className="material-symbols-outlined">
                 route
@@ -69,18 +76,11 @@ const Tools = () => {
               <span>
                 Ruteador
               </span>
-            </li>
+            </li>*/}
           </ul>
           <p className='madewithlove'> Made with 💜 From COPS</p>
         </div>
         <div>
-
-      {authorized ? (
-        <h1>Welcome to Tools</h1>
-      ) : (
-        <h1>Unauthorized Access</h1>
-      )}
-
     </div>
         <div className="tool-container">
           {activeTool === "cotizador" && <ToolContainer type="cotizador" />}
