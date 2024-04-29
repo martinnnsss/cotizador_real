@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx'
 
 import styled from 'styled-components';
 import PrimaryButton from '../Components/PrimaryButton'
+import LoadingPopup from '../Components/Popup';
 
 const UploadContainer = styled.div`
   width: 100%;
@@ -10,6 +11,8 @@ const UploadContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+
 `;
 
 const UploadBox = styled.div`
@@ -18,8 +21,11 @@ const UploadBox = styled.div`
   border-radius: 8px;
   box-shadow: 0px 5px 38px rgba(0, 0, 0, 0.156);
   text-align: center;
-  height: 50%;
+  height: 65%;
   width: 40%;
+  @media only screen and (max-width: 700px) {
+    width: 80%;
+  }
 `;
 
 
@@ -34,7 +40,7 @@ const UploadArea = styled.div`
   align-items: center;
   background-color: #F6F6F6;
   cursor: pointer;
-  height:60%;
+  height:45%;
 `;
 
 const UploadIcon = styled.div`
@@ -51,16 +57,21 @@ const Icon = styled.span`
 
 
 
+
 function ToolContainer({ type }){
     const [driveLink, setDriveLink] = useState('');
     const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [notionLink, setNotionLink] = useState('')
 
     const handleTemplateClick = () => {
         // Aquí puedes agregar más casos dependiendo de los type
         if (type === "cotizador") {
-            setDriveLink('https://drive.google.com/cotizador');
+            setDriveLink('https://docs.google.com/spreadsheets/d/1DR6ywVb7tYKUJHxvXurA1iFk3HuVdIBe/edit?usp=sharing&ouid=102814924398908057654&rtpof=true&sd=true');
+            setNotionLink('https://aware-wildflower-210.notion.site/Uso-de-Cotizador-57c147c4af184dba98c135e2129e0f4e');
         } else if (type === "ruteador") {
             setDriveLink('https://drive.google.com/ruteador');
+            setNotionLink('https://drive.google.com/ruteador');
         }
     };
 
@@ -72,15 +83,13 @@ function ToolContainer({ type }){
     }
 
 
-
-
-
     
     const handleFileUpload = (event) => {
         setFile(event.target.files[0]);
     };
 
     const handleSubmit = async () => {
+
         if (!file) {
             alert('Please select a file');
             return;
@@ -90,17 +99,18 @@ function ToolContainer({ type }){
         formData.append('file', file);
 
         try {
-            
-            // agregar endpoint ruteo!!!
+            setLoading(true);
 
             console.log(formData)
             const response = await fetch('https://copscl.pythonanywhere.com/cotizar', {
             method: 'POST',
             body: formData
             });
-            console.log(response)
+
             if (!response.ok) {
-            throw new Error('Failed to upload file');
+                setLoading(false);
+                
+                throw new Error(`Failed to upload file`);
             }
 
             // Process response if needed
@@ -142,16 +152,20 @@ function ToolContainer({ type }){
         } catch (error) {
             console.error('Error:', error);
             alert('Failed to upload file');
+        } finally {
+            setLoading(false); // Set loading to false when API call completes
         }
         };
 
 
     return (
         <UploadContainer>
+        <LoadingPopup isLoading={loading} />
         <UploadBox>
             <h1 className='title-tool-container'>{title}</h1>
             <p onClick={handleTemplateClick} className='template-downloader'>
-                    <a href={driveLink}>Template</a>
+                    <a href={driveLink} target="_blank">Template |</a>
+                    <a href={notionLink} target="_blank">| Manual de uso</a>
             </p>
             <UploadArea  >
                 <UploadIcon>
@@ -165,7 +179,7 @@ function ToolContainer({ type }){
                     onChange={handleFileUpload}
                 />
             </UploadArea>
-            <div onClick={handleSubmit} >
+            <div onClick={handleSubmit} style={{ marginTop: '1rem'}} >
                 < PrimaryButton text="Upload File"/>
             </div>
             
