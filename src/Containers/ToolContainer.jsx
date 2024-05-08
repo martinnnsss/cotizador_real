@@ -61,6 +61,7 @@ const Icon = styled.span`
 function ToolContainer({ type }){
     const [driveLink, setDriveLink] = useState('');
     const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState('');
     const [loading, setLoading] = useState(false);
     const [notionLink, setNotionLink] = useState('')
 
@@ -85,7 +86,9 @@ function ToolContainer({ type }){
 
     
     const handleFileUpload = (event) => {
-        setFile(event.target.files[0]);
+        const selectedFile = event.target.files[0]
+        setFile(selectedFile);
+        setFileName(selectedFile.name);
     };
 
     const handleSubmit = async () => {
@@ -151,7 +154,7 @@ function ToolContainer({ type }){
 
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to upload file');
+            alert('Template Erroneo, favor verificar el formato');
         } finally {
             setLoading(false); // Set loading to false when API call completes
         }
@@ -172,6 +175,7 @@ function ToolContainer({ type }){
                     <Icon className="material-symbols-outlined">cloud_upload</Icon>
                     <p>Deja tu template</p>
                 </UploadIcon>
+                <p> <i>{fileName}</i></p>
                 <input
                     id="file-upload"
                     type="file"
