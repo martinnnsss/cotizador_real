@@ -173,8 +173,7 @@ function ToolContainer({ type }){
             
             const jsonArray = JSON.parse(jsonData);
             // Convert JSON data to XLSX
-            console.log("-------------",selectedOption)
-            console.log(jsonArray)
+
             
 
             let multiplier =1
@@ -206,8 +205,8 @@ function ToolContainer({ type }){
                   "Cabify Group (6 pax)": cabifyGroup6Pax
                 };
             });
-            console.log(updatedArray)
-            const worksheet = XLSX.utils.json_to_sheet(jsonArray);
+
+            const worksheet = XLSX.utils.json_to_sheet(updatedArray);
         
             // Create workbook
             const workbook = XLSX.utils.book_new();
