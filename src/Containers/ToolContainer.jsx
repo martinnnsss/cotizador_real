@@ -21,7 +21,7 @@ const UploadBox = styled.div`
   border-radius: 8px;
   box-shadow: 0px 5px 38px rgba(0, 0, 0, 0.156);
   text-align: center;
-  height: 65%;
+  height: 75%;
   width: 40%;
   @media only screen and (max-width: 700px) {
     width: 80%;
@@ -40,8 +40,9 @@ const UploadArea = styled.div`
   align-items: center;
   background-color: #F6F6F6;
   cursor: pointer;
-  height:45%;
+  height:42%;
 `;
+
 
 const UploadIcon = styled.div`
   margin-bottom: 20px;
@@ -56,6 +57,41 @@ const Icon = styled.span`
 `;
 
 
+const DropdownContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const DropdownButton = styled.button`
+  color: var(--moradul);
+  padding: 10px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  width: 20vw;
+  border-radius: 1rem;
+`;
+
+const DropdownContent = styled.div`
+  display: ${({ open }) => (open ? 'block' : 'none')};
+  position: absolute;
+  background-color: #f9f9f9;
+  width:100%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 3;
+  border-radius: 10px;
+`;
+
+const Option = styled.div`
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 11px;
+
+    &:hover {
+        background-color: #f1f1f1;
+    }
+
+`;
 
 
 function ToolContainer({ type }){
@@ -64,6 +100,9 @@ function ToolContainer({ type }){
     const [fileName, setFileName] = useState('');
     const [loading, setLoading] = useState(false);
     const [notionLink, setNotionLink] = useState('')
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('');
 
     const handleTemplateClick = () => {
         // Aquí puedes agregar más casos dependiendo de los type
@@ -75,15 +114,21 @@ function ToolContainer({ type }){
             setNotionLink('https://drive.google.com/ruteador');
         }
     };
-
+    
     let title = 'Upload your files here';
     if (type === "cotizador") {
         title = "💰Cotizador💰";
     } else if (type === "ruteador") {
         title = "🗺️Ruteador🗺️";
     }
+    
+    const options = ["Normal", "Conductor Fijo", "Viaje Interregional", "Conductor Bilingüe", "Espera en Aeropuerto con Cartel"];
+    
 
-
+    const handleOptionClick = (option) => {
+        setSelectedOption(option);
+        setIsOpen(false);
+      };
     
     const handleFileUpload = (event) => {
         const selectedFile = event.target.files[0]
@@ -94,10 +139,17 @@ function ToolContainer({ type }){
     const handleSubmit = async () => {
 
         if (!file) {
-            alert('Please select a file');
+            alert('Selecciona un archivo a cotizar');
+            return;
+        }
+        if (selectedOption ===""){
+            alert ("Elige un tipo de cotización")
             return;
         }
 
+        if (  selectedOption ==="Conductor Fijo" || selectedOption ==="Conductor Bilingüe" || selectedOption ==="Espera en Aeropuerto con Cartel"){
+            alert("🚨 Viaje Especial 🚨 Has seleccionado un tipo de viaje que necesita ser gestionado por C-OPS. A continuación, te mostramos los precios finales, pero es importante que te comuniques con C-OPS para confirmar los detalles del servicio.")
+        }
         const formData = new FormData();
         formData.append('file', file);
 
@@ -118,12 +170,43 @@ function ToolContainer({ type }){
 
             // Process response if needed
             const jsonData = await response.json();
-
+            
             const jsonArray = JSON.parse(jsonData);
             // Convert JSON data to XLSX
+            console.log("-------------",selectedOption)
             console.log(jsonArray)
+            
 
+            let multiplier =1
 
+            if (selectedOption ==="Normal"){
+                multiplier=1
+            } else if (selectedOption ==="Conductor Fijo" || selectedOption ==="Conductor Bilingüe" || selectedOption ==="Espera en Aeropuerto con Cartel"){
+                multiplier=1.2
+            } else if (selectedOption ==="Viaje Interregional"){
+                multiplier=1.5
+            } 
+
+            const updatedArray = jsonArray.map(item => {
+                const roundToNearestThousand = (number) => Math.ceil(number / 1000) * 1000;
+
+                const cabifyMixCorp = roundToNearestThousand(item["Cabify Mix Corp"] * multiplier);
+                const cabifyCorp = roundToNearestThousand(item["Cabify Corp"] * multiplier);
+                const taxiCorp = roundToNearestThousand(item["Taxi Corp"] * multiplier);
+                const cabifyGroup8Pax = roundToNearestThousand(item["Cabify Group (8 pax)"] * multiplier);
+                const cabifyGroup6Pax = roundToNearestThousand(item["Cabify Group (6 pax)"] * multiplier);
+              
+                // Retornamos un nuevo objeto con los valores actualizados
+                return {
+                  ...item,
+                  "Cabify Mix Corp": cabifyMixCorp,
+                  "Cabify Corp": cabifyCorp,
+                  "Taxi Corp": taxiCorp,
+                  "Cabify Group (8 pax)": cabifyGroup8Pax,
+                  "Cabify Group (6 pax)": cabifyGroup6Pax
+                };
+            });
+            console.log(updatedArray)
             const worksheet = XLSX.utils.json_to_sheet(jsonArray);
         
             // Create workbook
@@ -170,6 +253,18 @@ function ToolContainer({ type }){
                     <a href={driveLink} target="_blank">Template |</a>
                     <a href={notionLink} target="_blank">| Manual de uso</a>
             </p>
+            <DropdownContainer>
+                <DropdownButton onClick={() => setIsOpen(!isOpen)}>
+                    { selectedOption.includes("Normal") || selectedOption.includes("Conductor Fijo") || selectedOption.includes("Viaje Interregional") || selectedOption.includes("Conductor Bilingüe") || selectedOption.includes("Espera en Aeropuerto con Cartel")  ? selectedOption : 'Tipo de Cotización' }
+                </DropdownButton>
+                <DropdownContent open={isOpen}>
+                    {options.map((option, index) => (
+                    <Option key={index} onClick={() => handleOptionClick(option)}>
+                        {option}
+                    </Option>
+                    ))}
+                </DropdownContent>
+            </DropdownContainer>
             <UploadArea  >
                 <UploadIcon>
                     <Icon className="material-symbols-outlined">cloud_upload</Icon>
@@ -186,7 +281,6 @@ function ToolContainer({ type }){
             <div onClick={handleSubmit} style={{ marginTop: '1rem'}} >
                 < PrimaryButton text="Upload File"/>
             </div>
-            
         </UploadBox>
         </UploadContainer>
     );

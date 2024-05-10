@@ -8,7 +8,7 @@ const StyledButton = styled.button`
   font-size: 1rem;
   font-weight: 600;
   
-  color: ${(props) => (props.mode === 'light' ?  'var(--blue)': '#fff' )};
+  color: ${(props) => (props.mode === 'light' ?  '#7145d6': '#fff' )};
   
   border-radius: 10px;
   padding: 10px 25px;
@@ -23,11 +23,11 @@ const StyledButton = styled.button`
   outline: none;
 
   &.primary-button {
-    background-color: ${(props) => (props.mode === 'light' ? 'rgba(255, 255, 255, 0.503)' : 'var(--blue)')};
-    background-image: ${(props) => (props.mode === 'light' ? '#ffffff8061bbc 0%, #f1f0ff 74%)' : 'linear-gradient(315deg, #261bbc 0%, #2316d5 74%)')};
+    background-color: ${(props) => (props.mode === 'light' ? 'rgba(255, 255, 255, 0.503)' : '#7145d6')};
+    background-image: ${(props) => (props.mode === 'light' ? '#ffffff8061bbc 0%, #f1f0ff 74%)' : 'var(--light-moradul)')};
     border: none;
     z-index: 1;
-    border: 1px solid var(--blue);
+    border: 1px solid #7145d6;
   }
   &.primary-button:after {
     position: absolute;
@@ -37,15 +37,13 @@ const StyledButton = styled.button`
     bottom: 0;
     left: 0;
     z-index: -1;
-    border-radius: 5px;
-    background-color: ${(props) => (props.mode === 'light' ? 'rgba(208, 220, 255, 0.175)' : 'var(--blue)')};
-    background-image: ${(props) => (props.mode === 'light' ? 'linear-gradient(315deg,  #ffffff 0%, #dadfff 74%)' : 'linear-gradient(315deg, #261bbc 0%, #070068 74%)')};
-    box-shadow: -7px -7px 20px 0px #fff9, -4px -4px 5px 0px #fff9,
-      7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
-    transition: all 0.3s ease;
+    border-radius: 7px;
+    background-color: ${(props) => (props.mode === 'light' ? 'rgba(208, 220, 255, 0.175)' : 'var(--light-moradul)')};
+    background-image: ${(props) => (props.mode === 'light' ? 'linear-gradient(315deg,  #ffffff 0%, #dadfff 74%)' : 'var(--light-moradul)')};
+
   }
   &:hover {
-    color: ${(props) => (props.mode === 'light' ?  'var(--blue)': '#fff' )};
+    color: ${(props) => (props.mode === 'light' ?  'var(--light-moradul)': '#fff' )};
   }
   &:hover:after {
     top: 0;

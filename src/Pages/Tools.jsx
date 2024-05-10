@@ -68,15 +68,6 @@ const Tools = () => {
                 Cotizador
               </span>
             </li>
-            {/*
-            <li className='toolbar-li' onClick={() => handleToolClick("ruteador")}>
-              <span className="material-symbols-outlined">
-                route
-              </span>
-              <span>
-                Ruteador
-              </span>
-            </li>*/}
           </ul>
           <p className='madewithlove'> Made with 💜 From COPS</p>
         </div>
