@@ -147,7 +147,7 @@ function ToolContainer({ type }){
             return;
         }
 
-        if (  selectedOption ==="Conductor Fijo" || selectedOption ==="Conductor Bilingüe" || selectedOption ==="Espera en Aeropuerto con Cartel"){
+        if (  selectedOption ==="Conductor Fijo" || selectedOption ==="Conductor Bilingüe" || selectedOption ==="Espera en Aeropuerto con Cartel" || selectedOption ==="Viaje Interregional"){
             alert("🚨 Viaje Especial 🚨 Has seleccionado un tipo de viaje que necesita ser gestionado por C-OPS. A continuación, te mostramos los precios finales, pero es importante que te comuniques con C-OPS para confirmar los detalles del servicio.")
         }
         const formData = new FormData();
