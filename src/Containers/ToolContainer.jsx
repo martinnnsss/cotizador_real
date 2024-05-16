@@ -240,7 +240,7 @@ function ToolContainer({ type }){
             const link = document.createElement('a');
             link.href = url;
 
-            const cotizacionName ='cotizacion_'+fileName+'.xlsx'
+            const cotizacionName ='Cotizacion2'+fileName
             
             link.setAttribute('download', cotizacionName);
             document.body.appendChild(link);
