@@ -239,7 +239,9 @@ function ToolContainer({ type }){
             // Create a link element to initiate the download
             const link = document.createElement('a');
             link.href = url;
-            cotizacionName ='cotizacion_'+fileName+'.xlsx'
+
+            const cotizacionName ='cotizacion_'+fileName+'.xlsx'
+            
             link.setAttribute('download', cotizacionName);
             document.body.appendChild(link);
         
