@@ -185,15 +185,30 @@ function ToolContainer({ type }){
             } else if (selectedOption ==="Viaje Interregional"){
                 multiplier=1.5
             } 
+            let cabifyMixCorp = 0;
+            let cabifyCorp = 0;
+            let taxiCorp = 0;
+            let cabifyGroup8Pax = 0;
+            let cabifyGroup6Pax = 0;
 
             const updatedArray = jsonArray.map(item => {
                 const roundToNearestThousand = (number) => Math.ceil(number / 1000) * 1000;
+                
 
-                const cabifyMixCorp = roundToNearestThousand(item["Cabify Mix Corp"] * multiplier);
-                const cabifyCorp = roundToNearestThousand(item["Cabify Corp"] * multiplier);
-                const taxiCorp = roundToNearestThousand(item["Taxi Corp"] * multiplier);
-                const cabifyGroup8Pax = roundToNearestThousand(item["Cabify Group (8 pax)"] * multiplier);
-                const cabifyGroup6Pax = roundToNearestThousand(item["Cabify Group (6 pax)"] * multiplier);
+                if (multiplier ===1 ){
+                    cabifyMixCorp = item["Cabify Mix Corp"] ;
+                    cabifyCorp = item["Cabify Corp"];
+                    taxiCorp = item["Taxi Corp"] ;
+                    cabifyGroup8Pax = item["Cabify Group (8 pax)"] ;
+                    cabifyGroup6Pax =  item["Cabify Group (6 pax)"] ;
+                } else {
+                    cabifyMixCorp = roundToNearestThousand(item["Cabify Mix Corp"] * multiplier);
+                    cabifyCorp = roundToNearestThousand(item["Cabify Corp"] * multiplier);
+                    taxiCorp = roundToNearestThousand(item["Taxi Corp"] * multiplier);
+                    cabifyGroup8Pax = roundToNearestThousand(item["Cabify Group (8 pax)"] * multiplier);
+                    cabifyGroup6Pax = roundToNearestThousand(item["Cabify Group (6 pax)"] * multiplier);
+                }
+
               
                 // Retornamos un nuevo objeto con los valores actualizados
                 return {
